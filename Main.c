@@ -149,6 +149,11 @@ void  term() {
 		factor();
 	}  printf("Exit <term>\n");
 }
+void factor() {
+	printf("Enter <factor>\n");
+	if (nextToken == IDENT || nextToken == INT_LIT)
+		lex();
+
 
 
 
