@@ -127,6 +127,10 @@ int lex() {
 		lexeme[0] = 'E';      
 		lexeme[1] = 'O';      
 		lexeme[2] = 'F';
+		lexeme[3] = 0;       
+		break;
+	}
+	printf("Next token is: %d, Next lexeme is %s\n", nextToken, lexeme);
 
 
 
