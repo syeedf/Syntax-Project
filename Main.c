@@ -49,3 +49,8 @@ int  lookup(char  ch)
 		addChar();      
 		nextToken = LEFT_PAREN;      
 		break;
+	case  ')':      
+		addChar();      
+		nextToken = RIGHT_PAREN;      
+		break;
+
