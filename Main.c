@@ -41,10 +41,8 @@ int main(void) {
 	while (nextToken != EOF); }
 }
 /* lookup - a function to lookup operators and  parentheses            and return the token */ 
-int  lookup(char  ch) 
-{
-	switch (ch) 
-	{
+int  lookup(char  ch) {
+	switch (ch) {
 	case  '(':      
 		addChar();      
 		nextToken = LEFT_PAREN;      
@@ -76,20 +74,16 @@ int  lookup(char  ch)
 	}
 	return  nextToken;
 }
-/*****************************************************/ 
 /* addChar - a function to add nextChar to lexeme */ 
-void addChar() 
-{
-	if (lexLen <= 98) 
-	{
+void addChar() {
+	if (lexLen <= 98) {
 		lexeme[lexLen++] = nextChar;    
 		lexeme[lexLen] = 0;
 	}
 	else    printf("Error - lexeme is too long \n");
 }
 void getChar() {
-	if ((nextChar = getc(in_fp)) != EOF) 
-	{
+	if ((nextChar = getc(in_fp)) != EOF) {
 		if (isalpha(nextChar))      
 			charClass = LETTER;    
 		else if (isdigit(nextChar))
@@ -98,26 +92,28 @@ void getChar() {
 	}
 	else     charClass = EOF;
 }
-void getNonBlank() 
-{ 
+void getNonBlank() { 
 	while (isspace(nextChar))    
 		getChar(); 
 }
 int lex() {
 	lexLen = 0;  
 	getNonBlank();  
-	switch (charClass) 
-	{
+	switch (charClass) {
 	case  LETTER:      
 		addChar();      
 		getChar();      
-		while (charClass == LETTER || charClass == DIGIT) 
-		{
+		while (charClass == LETTER || charClass == DIGIT) {
 			addChar();
 			getChar();
 		}    
 		nextToken = IDENT;    
 		break;
+	case  DIGIT:      
+		addChar();      
+		getChar();      
+		while (charClass == DIGIT){
+			addChar();
 
 
 
