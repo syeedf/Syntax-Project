@@ -87,6 +87,12 @@ void addChar()
 	}
 	else    printf("Error - lexeme is too long \n");
 }
+void getChar() {
+	if ((nextChar = getc(in_fp)) != EOF) 
+	{
+		if (isalpha(nextChar))      
+			charClass = LETTER;    
+		else if (isdigit(nextChar))
 
 
 
