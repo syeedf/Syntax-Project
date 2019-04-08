@@ -118,6 +118,12 @@ int lex() {
 		}      
 		nextToken = INT_LIT;      
 		break;
+	case  UNKNOWN:      
+		lookup(nextChar);      
+		getChar();      
+		break;
+
+
 
 
 
