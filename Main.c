@@ -114,6 +114,11 @@ int lex() {
 		getChar();      
 		while (charClass == DIGIT){
 			addChar();
+			getChar();
+		}      
+		nextToken = INT_LIT;      
+		break;
+
 
 
 
