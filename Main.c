@@ -114,6 +114,11 @@ int lex() {
 		while (charClass == LETTER || charClass == DIGIT) 
 		{
 			addChar();
+			getChar();
+		}    
+		nextToken = IDENT;    
+		break;
+
 
 
 
