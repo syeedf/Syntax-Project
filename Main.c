@@ -108,6 +108,12 @@ int lex() {
 	getNonBlank();  
 	switch (charClass) 
 	{
+	case  LETTER:      
+		addChar();      
+		getChar();      
+		while (charClass == LETTER || charClass == DIGIT) 
+		{
+			addChar();
 
 
 
