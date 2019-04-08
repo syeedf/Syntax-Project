@@ -69,5 +69,9 @@ int  lookup(char  ch)
 		addChar();      
 		nextToken = DIV_OP;      
 		break;
-
+	default:      
+		addChar();      
+		nextToken = EOF;      
+		break;
+	}
 
