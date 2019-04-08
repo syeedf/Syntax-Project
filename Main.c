@@ -28,7 +28,15 @@ int  lex();
 #define LEFT_PAREN 25 
 #define RIGHT_PAREN 26
 
+/* main driver */ 
 int main(void) {
-	printf("Hello World\n");
-	return 0;
+	/* Open the input data file and process its contents */   
+	if ((in_fp = fopen("front.in", "r")) == NULL)     
+		printf("ERROR - cannot open front.in \n");   
+	else { getChar();     
+	do 
+	{ 
+		lex(); 
+	} 
+	while (nextToken != EOF); }
 }
