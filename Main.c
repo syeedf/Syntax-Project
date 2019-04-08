@@ -158,6 +158,12 @@ void factor() {
 			lex();      
 			expr();     
 			if (nextToken == RIGHT_PAREN)
+				lex();      
+			else        
+				error();
+		}
+		else      
+			error();
 
 
 
