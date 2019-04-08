@@ -141,6 +141,12 @@ void  expr() {
 		term();
 	}  printf("Exit <expr>\n");
 }  /* End of function expr */
+void  term() {
+	printf("Enter <term>\n");
+	factor();
+	while (nextToken == MULT_OP || nextToken == DIV_OP) {
+		lex();
+
 
 
 
