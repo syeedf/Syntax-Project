@@ -98,6 +98,11 @@ void getChar() {
 	}
 	else     charClass = EOF;
 }
+void getNonBlank() 
+{ 
+	while (isspace(nextChar))    
+		getChar(); 
+}
 
 
 
