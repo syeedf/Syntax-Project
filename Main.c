@@ -153,7 +153,11 @@ void factor() {
 	printf("Enter <factor>\n");
 	if (nextToken == IDENT || nextToken == INT_LIT)
 		lex();
-
+	else {
+		if (nextToken == LEFT_PAREN) {
+			lex();      
+			expr();     
+			if (nextToken == RIGHT_PAREN)
 
 
 
