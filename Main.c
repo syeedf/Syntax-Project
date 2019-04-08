@@ -7,12 +7,14 @@ char  nextChar;
 int  lexLen;
 int  token; 
 int  nextToken; 
-FILE *in_fp, *fopen();
+FILE *in_fp;
 /* Function declarations */ 
 void  addChar();
 void  getChar(); 
 void  getNonBlank(); 
 int  lex();
+void expr();
+void error();
 /* Character classes */ 
 #define LETTER 0 
 #define DIGIT 1 
@@ -29,16 +31,21 @@ int  lex();
 #define RIGHT_PAREN 26
 
 /* main driver */ 
-int main(void) {
+int main() {
 	/* Open the input data file and process its contents */   
-	if ((in_fp = fopen("front.in", "r")) == NULL)     
+	if ((in_fp = fopen("infile.txt", "r")) == NULL)     
 		printf("ERROR - cannot open front.in \n");   
-	else { getChar();     
+	else { 
+		getChar();     
 	do 
 	{ 
 		lex(); 
 	} 
-	while (nextToken != EOF); }
+	while (nextToken != EOF); 
+	}
+
+	return 0;
+
 }
 /* lookup - a function to lookup operators and  parentheses            and return the token */ 
 int  lookup(char  ch) {
@@ -133,14 +140,28 @@ int lex() {
 	printf("Next token is: %d, Next lexeme is %s\n", nextToken, lexeme);
 	return  nextToken;
 }
-void  expr() {
-	printf("Enter <expr>\n");
-	term();
-	while (nextToken == ADD_OP || nextToken == SUB_OP) {
+void factor() {
+	printf("Enter <factor>\n");
+	if (nextToken == IDENT || nextToken == INT_LIT)
 		lex();
-		term();
-	}  printf("Exit <expr>\n");
-}  /* End of function expr */
+	else {
+		if (nextToken == LEFT_PAREN) {
+			lex();
+			expr();
+			if (nextToken == RIGHT_PAREN)
+				lex();
+			else
+				error();
+		}
+		else
+			error();
+	}
+	printf("Exit <factor>\n");;
+}
+void error()
+{
+	printf("There is an error");
+}
 void  term() {
 	printf("Enter <term>\n");
 	factor();
@@ -149,21 +170,14 @@ void  term() {
 		factor();
 	}  printf("Exit <term>\n");
 }
-void factor() {
-	printf("Enter <factor>\n");
-	if (nextToken == IDENT || nextToken == INT_LIT)
+void  expr() {
+	printf("Enter <expr>\n");
+	term();
+	while (nextToken == ADD_OP || nextToken == SUB_OP) {
 		lex();
-	else {
-		if (nextToken == LEFT_PAREN) {
-			lex();      
-			expr();     
-			if (nextToken == RIGHT_PAREN)
-				lex();      
-			else        
-				error();
-		}
-		else      
-			error();
+		term();
+	}  printf("Exit <expr>\n");
+}  /* End of function expr */
 
 
 
