@@ -74,4 +74,13 @@ int  lookup(char  ch)
 		nextToken = EOF;      
 		break;
 	}
+	return  nextToken;
+}
+/*****************************************************/ 
+/* addChar - a function to add nextChar to lexeme */ 
+void addChar() {
+	if (lexLen <= 98) {
+		lexeme[lexLen++] = nextChar;    lexeme[lexLen] = 0;
+
+
 
