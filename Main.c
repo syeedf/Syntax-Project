@@ -162,6 +162,13 @@ int lex() {
 		lookup(nextChar);      
 		getChar();      
 		break;
+	case NEWLINE:
+		nextToken = NEWLINE;
+		lexeme[0] = 'E';
+		lexeme[1] = 'O';
+		lexeme[2] = 'L';
+		lexeme[3] = 0;
+		break;
 	case  EOF:      
 		nextToken = EOF;      
 		lexeme[0] = 'E';      
