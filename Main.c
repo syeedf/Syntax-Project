@@ -8,10 +8,12 @@ int  lexLen;
 int  token; 
 int  nextToken; 
 FILE *in_fp;
+int read;
 /* Function declarations */ 
 void  addChar();
 void  getChar(); 
-void  getNonBlank(); 
+void  getNonBlank();
+void getLine();
 int  lex();
 void expr();
 void error();
@@ -30,6 +32,7 @@ void error();
 #define LEFT_PAREN 25 
 #define RIGHT_PAREN 26
 
+
 /* main driver */ 
 int main() {
 	/* Open the input data file and process its contents */   
@@ -39,9 +42,11 @@ int main() {
 		getChar();     
 	do 
 	{ 
-		lex(); 
+		lex();
+		expr();
+
 	} 
-	while (nextToken != EOF); 
+	while (nextToken != EOF || nextToken == '\n'); 
 	}
 
 	return 0;
@@ -88,6 +93,13 @@ void addChar() {
 		lexeme[lexLen] = 0;
 	}
 	else    printf("Error - lexeme is too long \n");
+}
+void getLine()
+{
+	while (read = fgetc("infile.txt") != EOF)
+	{
+		getChar(line);
+	}
 }
 void getChar() {
 	if ((nextChar = getc(in_fp)) != EOF) {
@@ -141,26 +153,35 @@ int lex() {
 	return  nextToken;
 }
 void factor() {
-	printf("Enter <factor>\n");
-	if (nextToken == IDENT || nextToken == INT_LIT)
+	
+	if (nextToken == IDENT || nextToken == INT_LIT) {
+		printf("Enter <factor>\n");
 		lex();
+	}
+	else if (nextToken == '\n')
+	{
+		printf("Exit <factor>\n");
+
+	}
 	else {
 		if (nextToken == LEFT_PAREN) {
 			lex();
 			expr();
 			if (nextToken == RIGHT_PAREN)
 				lex();
-			else
+			else {
 				error();
+			}
 		}
-		else
+		else {
+			printf("Its this error.");
 			error();
+		}
 	}
-	printf("Exit <factor>\n");;
+	printf("Exit <factor>\n");
 }
-void error()
-{
-	printf("There is an error");
+void error(){
+	printf("There is an error.\n");
 }
 void  term() {
 	printf("Enter <term>\n");
@@ -178,6 +199,5 @@ void  expr() {
 		term();
 	}  printf("Exit <expr>\n");
 }  /* End of function expr */
-
 
 
