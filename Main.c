@@ -1,5 +1,6 @@
 #include <stdio.h> 
 #include <ctype.h>
+#include <stdbool.h>
 /* Global declarations */ /* Variables */ 
 int  charClass; 
 char  lexeme[100]; 
@@ -8,9 +9,14 @@ int  lexLen;
 int  token; 
 int  nextToken; 
 FILE *in_fp;
-int read;
+size_t read;
+size_t len = 32;
+char *line;
+char charholder[];
+
 /* Function declarations */ 
 void  addChar();
+bool isnewline(char);
 void  getChar(); 
 void  getNonBlank();
 void getLine();
@@ -31,6 +37,7 @@ void error();
 #define DIV_OP 24 
 #define LEFT_PAREN 25 
 #define RIGHT_PAREN 26
+#define NEWLINE '\n'
 
 
 /* main driver */ 
@@ -39,14 +46,15 @@ int main() {
 	if ((in_fp = fopen("infile.txt", "r")) == NULL)     
 		printf("ERROR - cannot open front.in \n");   
 	else { 
-		getChar();     
+		//getLine();
+		getChar();
 	do 
 	{ 
 		lex();
 		expr();
 
 	} 
-	while (nextToken != EOF || nextToken == '\n'); 
+	while (nextToken != EOF); 
 	}
 
 	return 0;
@@ -94,19 +102,32 @@ void addChar() {
 	}
 	else    printf("Error - lexeme is too long \n");
 }
-void getLine()
+/*void getLine()
 {
-	while (read = fgetc("infile.txt") != EOF)
+	while ((read = getline(&line, &len, in_fp)) != -1)
 	{
 		getChar(line);
 	}
 }
+*/
+bool isnewline(nextChar)
+{
+	if (nextChar == '\n')
+	{
+		return true;
+	}
+	return false;
+}
 void getChar() {
+
 	if ((nextChar = getc(in_fp)) != EOF) {
-		if (isalpha(nextChar))      
-			charClass = LETTER;    
+		if (isalpha(nextChar))
+			charClass = LETTER;
 		else if (isdigit(nextChar))
-			charClass = DIGIT;         
+			charClass = DIGIT;
+		else if (isnewline(nextChar))
+			charClass = NEWLINE;
+
 		else  charClass = UNKNOWN;
 	}
 	else     charClass = EOF;
