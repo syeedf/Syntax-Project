@@ -1,6 +1,5 @@
 #include <stdio.h> 
 #include <ctype.h>
-#include <stdbool.h>
 /* Global declarations */ /* Variables */ 
 int  charClass; 
 char  lexeme[100]; 
@@ -11,13 +10,14 @@ int  nextToken;
 FILE *in_fp;
 size_t read;
 size_t len = 32;
+char str[60] = { ' ' };
+
 char *line;
-char charholder[];
+char charholder[100];
 
 /* Function declarations */ 
 void  addChar();
-bool isnewline(char);
-void  getChar(); 
+void  getChar(char[][]); 
 void  getNonBlank();
 void getLine();
 int  lex();
@@ -37,7 +37,7 @@ void error();
 #define DIV_OP 24 
 #define LEFT_PAREN 25 
 #define RIGHT_PAREN 26
-#define NEWLINE '\n'
+
 
 
 /* main driver */ 
@@ -45,18 +45,15 @@ int main() {
 	/* Open the input data file and process its contents */   
 	if ((in_fp = fopen("infile.txt", "r")) == NULL)     
 		printf("ERROR - cannot open front.in \n");   
-	else { 
+	else {
 		//getLine();
-		getChar();
-	do 
-	{ 
-		lex();
-		expr();
-
-	} 
-	while (nextToken != EOF); 
-	}
-
+			getChar();
+			do
+			{
+					lex();
+					expr();
+				
+			} while (nextToken != EOF);
 	return 0;
 
 }
@@ -87,6 +84,7 @@ int  lookup(char  ch) {
 		addChar();      
 		nextToken = DIV_OP;      
 		break;
+
 	default:      
 		addChar();      
 		nextToken = EOF;      
@@ -102,39 +100,37 @@ void addChar() {
 	}
 	else    printf("Error - lexeme is too long \n");
 }
-/*void getLine()
+void getLine()
 {
-	while ((read = getline(&line, &len, in_fp)) != -1)
+	int i = 0;
+	while ((fgets(str, sizeof str, in_fp) != EOF))
 	{
-		getChar(line);
+		
+		charholder[i] = str;
+		i++;
 	}
-}
-*/
-bool isnewline(nextChar)
-{
-	if (nextChar == '\n')
-	{
-		return true;
-	}
-	return false;
-}
-void getChar() {
+	for (int i = 0; i < sizeof charholder; i++)
+		for (int j = 0; j < sizeof str; j++)
+			getChar(charholder[i][j]);
 
-	if ((nextChar = getc(in_fp)) != EOF) {
-		if (isalpha(nextChar))
-			charClass = LETTER;
-		else if (isdigit(nextChar))
-			charClass = DIGIT;
-		else if (isnewline(nextChar))
-			charClass = NEWLINE;
+}
 
-		else  charClass = UNKNOWN;
+
+void getChar(char charholder[x][y]) {
+	for (int i = 0; charholder[x][y]!=NULL; i++) {
+		if ((nextChar = str[i]) != '   ') {
+			if (isalpha(nextChar))
+				charClass = LETTER;
+			else if (isdigit(nextChar))
+				charClass = DIGIT;
+
+			else  charClass = UNKNOWN;
+		}
 	}
-	else     charClass = EOF;
 }
 void getNonBlank() { 
 	while (isspace(nextChar))    
-		getChar(); 
+		getChar(str); 
 }
 int lex() {
 	lexLen = 0;  
@@ -142,16 +138,16 @@ int lex() {
 	switch (charClass) {
 	case  LETTER:      
 		addChar();      
-		getChar();      
+		getChar(str);      
 		while (charClass == LETTER || charClass == DIGIT) {
 			addChar();
-			getChar();
+			getChar(str);
 		}    
 		nextToken = IDENT;    
 		break;
 	case  DIGIT:      
 		addChar();      
-		getChar();      
+		getChar(str);      
 		while (charClass == DIGIT){
 			addChar();
 			getChar();
@@ -160,14 +156,7 @@ int lex() {
 		break;
 	case  UNKNOWN:      
 		lookup(nextChar);      
-		getChar();      
-		break;
-	case NEWLINE:
-		nextToken = NEWLINE;
-		lexeme[0] = 'E';
-		lexeme[1] = 'O';
-		lexeme[2] = 'L';
-		lexeme[3] = 0;
+		getChar(str);      
 		break;
 	case  EOF:      
 		nextToken = EOF;      
