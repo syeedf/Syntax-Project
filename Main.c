@@ -1,33 +1,27 @@
 #include <stdio.h> 
 #include <ctype.h>
-/* Global declarations */ /* Variables */ 
-int  charClass; 
-char  lexeme[100]; 
-char  nextChar; 
+/* Global declarations */ /* Variables */
+int  charClass;
+char  lexeme[100];
+char  nextChar;
 int  lexLen;
-int  token; 
-int  nextToken; 
+int  token;
+int  nextToken;
 FILE *in_fp;
-size_t read;
-size_t len = 32;
-char str[60] = { ' ' };
-
-char *line;
-char charholder[100];
-
-/* Function declarations */ 
+int read;
+/* Function declarations */
 void  addChar();
-void  getChar(char[][]); 
+void  getChar();
 void  getNonBlank();
 void getLine();
 int  lex();
 void expr();
 void error();
-/* Character classes */ 
+/* Character classes */
 #define LETTER 0 
 #define DIGIT 1 
 #define UNKNOWN 99
-/* Token codes */ 
+/* Token codes */
 #define INT_LIT 10 
 #define IDENT 11 
 #define ASSIGN_OP 20 
@@ -37,140 +31,130 @@ void error();
 #define DIV_OP 24 
 #define LEFT_PAREN 25 
 #define RIGHT_PAREN 26
-
-
-
-/* main driver */ 
+/* main driver */
 int main() {
-	/* Open the input data file and process its contents */   
-	if ((in_fp = fopen("infile.txt", "r")) == NULL)     
-		printf("ERROR - cannot open front.in \n");   
+	/* Open the input data file and process its contents */
+	if ((in_fp = fopen("infile.txt", "r")) == NULL)
+		printf("ERROR - cannot open front.in \n");
 	else {
-		//getLine();
-			getChar();
-			do
-			{
-					lex();
-					expr();
-				
-			} while (nextToken != EOF);
+		getChar();
+		do
+		{
+			lex();
+			expr();
+		}
+		while (nextToken != EOF || nextToken == '\n');
+	}
 	return 0;
-
 }
-/* lookup - a function to lookup operators and  parentheses            and return the token */ 
+/* lookup - a function to lookup operators and  parentheses and return the token */
 int  lookup(char  ch) {
 	switch (ch) {
-	case  '(':      
-		addChar();      
-		nextToken = LEFT_PAREN;      
+	case  '(':
+		addChar();
+		nextToken = LEFT_PAREN;
 		break;
-	case  ')':      
-		addChar();      
-		nextToken = RIGHT_PAREN;      
+	case  ')':
+		addChar();
+		nextToken = RIGHT_PAREN;
 		break;
-	case  '+':      
-		addChar();      
-		nextToken = ADD_OP;      
+	case  '+':
+		addChar();
+		nextToken = ADD_OP;
 		break;
-	case  '-':      
-		addChar();      
-		nextToken = SUB_OP;      
+	case  '-':
+		addChar();
+		nextToken = SUB_OP;
 		break;
-	case  '*':      
-		addChar();      
-		nextToken = MULT_OP;      
+	case  '*':
+		addChar();
+		nextToken = MULT_OP;
 		break;
-	case  '/':      
-		addChar();      
-		nextToken = DIV_OP;      
+	case  '/':
+		addChar();
+		nextToken = DIV_OP;
 		break;
-
-	default:      
-		addChar();      
-		nextToken = EOF;      
+	default:
+		addChar();
+		nextToken = EOF;
 		break;
 	}
 	return  nextToken;
 }
-/* addChar - a function to add nextChar to lexeme */ 
+/* addChar - a function to add nextChar to lexeme */
 void addChar() {
 	if (lexLen <= 98) {
-		lexeme[lexLen++] = nextChar;    
+		lexeme[lexLen++] = nextChar;
 		lexeme[lexLen] = 0;
 	}
 	else    printf("Error - lexeme is too long \n");
 }
-void getLine()
+/*void getLine()
+
 {
-	int i = 0;
-	while ((fgets(str, sizeof str, in_fp) != EOF))
+
+	while (read = fgetc("infile.txt") != EOF)
+
 	{
-		
-		charholder[i] = str;
-		i++;
+
+		getChar(line);
+
 	}
-	for (int i = 0; i < sizeof charholder; i++)
-		for (int j = 0; j < sizeof str; j++)
-			getChar(charholder[i][j]);
 
 }
-
-
-void getChar(char charholder[x][y]) {
-	for (int i = 0; charholder[x][y]!=NULL; i++) {
-		if ((nextChar = str[i]) != '   ') {
-			if (isalpha(nextChar))
-				charClass = LETTER;
-			else if (isdigit(nextChar))
-				charClass = DIGIT;
-
-			else  charClass = UNKNOWN;
-		}
+*/
+void getChar() {
+	if ((nextChar = getc(in_fp)) != EOF) {
+		if (isalpha(nextChar))
+			charClass = LETTER;
+		else if (isdigit(nextChar))
+			charClass = DIGIT;
+		else  charClass = UNKNOWN;
 	}
+	else     charClass = EOF;
 }
-void getNonBlank() { 
-	while (isspace(nextChar))    
-		getChar(str); 
+void getNonBlank() {
+	while (isspace(nextChar))
+		getChar();
 }
 int lex() {
-	lexLen = 0;  
-	getNonBlank();  
+	lexLen = 0;
+	getNonBlank();
 	switch (charClass) {
-	case  LETTER:      
-		addChar();      
-		getChar(str);      
+	case  LETTER:
+		addChar();
+		getChar();
 		while (charClass == LETTER || charClass == DIGIT) {
 			addChar();
-			getChar(str);
-		}    
-		nextToken = IDENT;    
+			getChar();
+		}
+		nextToken = IDENT;
 		break;
-	case  DIGIT:      
-		addChar();      
-		getChar(str);      
-		while (charClass == DIGIT){
+	case  DIGIT:
+		addChar();
+		getChar();
+		while (charClass == DIGIT) {
 			addChar();
 			getChar();
-		}      
-		nextToken = INT_LIT;      
+		}
+		nextToken = INT_LIT;
 		break;
-	case  UNKNOWN:      
-		lookup(nextChar);      
-		getChar(str);      
+	case  UNKNOWN:
+		lookup(nextChar);
+		getChar();
 		break;
-	case  EOF:      
-		nextToken = EOF;      
-		lexeme[0] = 'E';      
-		lexeme[1] = 'O';      
+	case  EOF:
+		nextToken = EOF;
+		lexeme[0] = 'E';
+		lexeme[1] = 'O';
 		lexeme[2] = 'F';
-		lexeme[3] = 0;       
+		lexeme[3] = 0;
 		break;
 	}
 	printf("Next token is: %d, Next lexeme is %s\n", nextToken, lexeme);
 	return  nextToken;
 }
 void factor() {
-	
 	if (nextToken == IDENT || nextToken == INT_LIT) {
 		printf("Enter <factor>\n");
 		lex();
@@ -178,7 +162,6 @@ void factor() {
 	else if (nextToken == '\n')
 	{
 		printf("Exit <factor>\n");
-
 	}
 	else {
 		if (nextToken == LEFT_PAREN) {
@@ -197,7 +180,7 @@ void factor() {
 	}
 	printf("Exit <factor>\n");
 }
-void error(){
+void error() {
 	printf("There is an error.\n");
 }
 void  term() {
@@ -216,5 +199,3 @@ void  expr() {
 		term();
 	}  printf("Exit <expr>\n");
 }  /* End of function expr */
-
-
